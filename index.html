@@ -26,7 +26,6 @@
         const waiting = document.getElementById("waiting");
         const mainDivCam = document.getElementById("camLiveDiv");
 
-
         var model = undefined;
 
         var labels = [];
@@ -34,7 +33,6 @@
 
         function predictWebCam() {
             model.detect(mainVideo).then(predictions => {
-                console.log(predictions)
                 for (let i = 0; i < labels.length; i++) {
                     mainDivCam.removeChild(labels[i]);
                 }
@@ -44,14 +42,22 @@
                 }
                 boxes = [];
                 for (let i = 0; i < predictions.length; i++) {
-                    if (predictions[i].score > 0.55) {
+                    if (predictions[i].score > 0.5) {
                         let newBox = document.createElement("div");
-                        newBox.textContent = predictions[i].class;
+
+                        let scaleX = (mainVideo.getBoundingClientRect().width-60) / mainVideo.videoWidth;
+                        let scaleY = (mainVideo.getBoundingClientRect().height-60) / mainVideo.videoHeight;
+                        
+                        let leftPos = predictions[i].bbox[0]*scaleX+30;
+                        let topPos = predictions[i].bbox[1]*scaleY+30;
+                        let widthDim = (predictions[i].bbox[2])*scaleX;
+                        let heightDim = (predictions[i].bbox[3])*scaleY;
+
                         newBox.style = `
-                        left: ${predictions[i].bbox[0]+30}px;
-                        top: ${predictions[i].bbox[1]+30}px; 
-                        width: ${predictions[i].bbox[2]}px;
-                        height: ${predictions[i].bbox[3]}px;
+                        left: ${leftPos}px;
+                        top: ${topPos}px; 
+                        width: ${widthDim}px;
+                        height: ${heightDim}px;
                         `
                         newBox.classList.add("box");
                         mainDivCam.appendChild(newBox);
@@ -59,11 +65,11 @@
 
 
                         let lab = document.createElement("div");
-                        lab.textContent = predictions[i].class;
+                        lab.textContent = predictions[i].class + " - " + Math.round(predictions[i].score*100, 2) + "%";
                         lab.style = `
-                        left: ${predictions[i].bbox[0]+30}px;
-                        top: ${predictions[i].bbox[1]+30}px; 
-                        width: ${predictions[i].bbox[2]}px;
+                        left: ${leftPos}px;
+                        top: ${topPos}px; 
+                        width: ${widthDim}px;
                         `
                         lab.classList.add("label");
                         mainDivCam.appendChild(lab);

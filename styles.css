@@ -22,7 +22,7 @@ body {
 
 #mainVideo{
     position: relative;
-    padding: 30px 60px;
+    padding: 30px;
     box-sizing: border-box;
     display: none;
     border-radius: 25px;
@@ -39,6 +39,7 @@ body {
     position: absolute;
     border-radius: 5px;
     background-color: rgb(222 234 255 / 50%);
+    color: black;
 }
 
 .label {
