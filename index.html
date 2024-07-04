@@ -1,0 +1,90 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object Detection</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="waiting">Waiting for the model...</div>
+    <div id="mainFrame">
+        <video id="mainVideo" autoplay></video>
+    </div>
+
+    <!-- Load TensorFlow.js. This is required to use coco-ssd model. -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"> </script>
+    <!-- Load the coco-ssd model. -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"> </script>
+
+    <script>
+        const mainVideo = document.getElementById("mainVideo");
+        const waiting = document.getElementById("waiting");
+        const mainFrame = document.getElementById("mainFrame");
+
+        var model = undefined;
+
+        var labels = [];
+        var boxes = [];
+
+        function predictWebCam() {
+            model.detect(mainVideo).then(predictions => {
+                for (let i = 0; i < labels.length; i++) {
+                    mainFrame.removeChild(labels[i]);
+                }
+                labels = [];
+                for (let i = 0; i < boxes.length; i++) {
+                    mainFrame.removeChild(boxes[i]);
+                }
+                boxes = [];
+                for (let i = 0; i < predictions.length; i++) {
+                    if (predictions[i].score > 0.55) {
+                        let newBox = document.createElement("div");
+                        newBox.textContent = predictions[i].class;
+                        newBox.style = `position: absolute; 
+                        left: ${predictions[i].bbox[0]+30}px;
+                        top: ${predictions[i].bbox[1]+30}px; 
+                        width: ${predictions[i].bbox[2]}px;
+                        height: ${predictions[i].bbox[3]}px;`
+                        newBox.classList.add("box");
+                        mainFrame.appendChild(newBox);
+                        boxes.push(newBox);
+
+
+                        let lab = document.createElement("div");
+                        lab.textContent = predictions[i].class;
+                        lab.style = `position: absolute; 
+                        left: ${predictions[i].bbox[0]+30}px;
+                        top: ${predictions[i].bbox[1]+30}px; 
+                        width: ${predictions[i].bbox[2]}px;
+                        text-align: center;
+                        background-color: grey;`
+                        mainFrame.appendChild(lab);
+                        labels.push(lab);
+                    }
+                }
+            });
+            window.requestAnimationFrame(predictWebCam);
+        }
+
+        cocoSsd.load().then(loadedModel => {
+            model = loadedModel;
+            mainVideo.style.display = "block";
+            waiting.style.display = "none";
+            if (navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+                    mainVideo.srcObject = stream;
+                    mainVideo.addEventListener("loadeddata", predictWebCam)
+                }).catch(err => {
+                    console.log(err);
+                });
+            }
+            else {
+                console.log("Video not supported!");
+            }
+        })
+
+
+
+    </script>
+</body>
+</html>
