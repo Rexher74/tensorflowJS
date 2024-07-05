@@ -122,14 +122,15 @@
         })
 
         function changeCam() {
-            streamUsed.getTracks().forEach((track) => {
-                track.stop();
-            })
-            if (camFacingMode == "user") {
-                camFacingMode = "enviroment";
+            if (streamUsed) {
+                const tracks = streamUsed.getTracks();
+                tracks.forEach(track => track.stop());
             }
-            else if (camFacingMode == "enviroment"){
-                camFacingMode = "user";
+            if (camFacingMode == 'user') {
+                camFacingMode = 'enviroment';
+            }
+            else if (camFacingMode == 'enviroment'){
+                camFacingMode = 'user';
 
             }
             loadVideo();
