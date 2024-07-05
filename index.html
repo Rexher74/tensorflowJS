@@ -27,7 +27,8 @@
         const waiting = document.getElementById("waiting");
         const mainDivCam = document.getElementById("camLiveDiv");
 
-        document.getElementById("changeCam").addEventListener("click", changeCam);
+        const changeCam = document.getElementById("changeCam");
+        changeCam.addEventListener("click", changeCam);
 
         var model = undefined;
 
@@ -104,10 +105,14 @@
             model = loadedModel;
             mainVideo.style.display = "block";
             waiting.style.display = "none";
+            changeCam.style.display = "block";
             loadVideo("user");
         })
 
         function changeCam() {
+            videoStream.getTracks().forEach((track) => {
+                track.stop();
+            })
             if (camFacingMode == "user") {
                 camFacingMode = "enviroment";
             }
