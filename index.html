@@ -27,7 +27,7 @@
         const waiting = document.getElementById("waiting");
         const mainDivCam = document.getElementById("camLiveDiv");
 
-        const changeCam = document.getElementById("changeCam");
+        const changeCamEle = document.getElementById("changeCam");
 
         var model = undefined;
 
@@ -104,8 +104,8 @@
             model = loadedModel;
             mainVideo.style.display = "block";
             waiting.style.display = "none";
-            changeCam.style.display = "block";
-            changeCam.addEventListener("click", changeCam);
+            changeCamEle.style.display = "block";
+            changeCamEle.addEventListener("click", changeCam);
             loadVideo("user");
         })
 
