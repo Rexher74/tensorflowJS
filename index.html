@@ -89,6 +89,7 @@
             if (navigator.mediaDevices.getUserMedia) {
                 navigator.mediaDevices.getUserMedia({ video: {facingMode: cam}})
                 .then(stream => {
+                    mainVideo.srcObject = null;
                     mainVideo.srcObject = stream;
                     mainVideo.addEventListener("loadeddata", predictWebCam)
                 }).catch(err => {
