@@ -100,6 +100,7 @@
                     },
                 })
                 .then(stream => {
+                    console.log(camFacingMode)
                     mainVideo.srcObject = stream;
                     streamUsed = stream;
                     mainVideo.addEventListener("loadeddata", predictWebCam)
@@ -123,7 +124,10 @@
 
         function changeCam() {
             if (streamUsed) {
+                
                 const tracks = streamUsed.getTracks();
+                console.log(tracks)
+                console.log(streamUsed)
                 tracks.forEach(track => track.stop());
             }
             if (camFacingMode == 'user') {
