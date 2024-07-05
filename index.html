@@ -91,12 +91,12 @@
 
         var camFacingMode = "user";
 
-        function loadVideo(cam) {
+        function loadVideo() {
             if (navigator.mediaDevices.getUserMedia) {
                 navigator.mediaDevices.getUserMedia({
                     audio: false,
                     video: {
-                        facingMode: cam,
+                        facingMode: camFacingMode,
                     },
                 })
                 .then(stream => {
@@ -118,7 +118,7 @@
             waiting.style.display = "none";
             changeCamEle.style.display = "block";
             changeCamEle.addEventListener("click", changeCam);
-            loadVideo("user");
+            loadVideo();
         })
 
         function changeCam() {
@@ -132,7 +132,7 @@
                 camFacingMode = "user";
 
             }
-            loadVideo(camFacingMode);
+            loadVideo();
         }
 
 
