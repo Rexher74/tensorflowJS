@@ -13,7 +13,8 @@
     <div id="mainFrame">
         <div id="camLiveDiv">
             <video id="mainVideo" autoplay width="100%" height="100%"></video>
-        </div>
+        </div>  
+        <div id="changeCam">Switch Cam</div>
     </div>
 
     <!-- Load TensorFlow.js. This is required to use coco-ssd model. -->
@@ -25,6 +26,8 @@
         const mainVideo = document.getElementById("mainVideo");
         const waiting = document.getElementById("waiting");
         const mainDivCam = document.getElementById("camLiveDiv");
+
+        document.getElementById("changeCam").addEventListener("click", changeCam);
 
         var model = undefined;
 
@@ -80,12 +83,12 @@
             window.requestAnimationFrame(predictWebCam);
         }
 
-        cocoSsd.load().then(loadedModel => {
-            model = loadedModel;
-            mainVideo.style.display = "block";
-            waiting.style.display = "none";
+        var camFacingMode = "user";
+
+        function loadVideo(cam) {
             if (navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+                navigator.mediaDevices.getUserMedia({ video: {facingMode: cam}})
+                .then(stream => {
                     mainVideo.srcObject = stream;
                     mainVideo.addEventListener("loadeddata", predictWebCam)
                 }).catch(err => {
@@ -95,7 +98,25 @@
             else {
                 console.log("Video not supported!");
             }
+        }
+
+        cocoSsd.load().then(loadedModel => {
+            model = loadedModel;
+            mainVideo.style.display = "block";
+            waiting.style.display = "none";
+            loadVideo("user");
         })
+
+        function changeCam() {
+            if (camFacingMode == "user") {
+                camFacingMode = "enviroment";
+            }
+            else if (camFacingMode == "enviroment"){
+                camFacingMode = "user";
+
+            }
+            loadVideo(camFacingMode);
+        }
 
 
 
