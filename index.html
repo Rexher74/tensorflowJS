@@ -87,7 +87,7 @@
 
         function loadVideo(cam) {
             if (navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.getUserMedia({ video: {facingMode: cam}})
+                navigator.mediaDevices.getUserMedia({ video: {facingMode: "enviroment"}})
                 .then(stream => {
                     mainVideo.srcObject = null;
                     mainVideo.srcObject = stream;
