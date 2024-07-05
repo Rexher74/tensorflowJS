@@ -28,6 +28,7 @@
         const mainDivCam = document.getElementById("camLiveDiv");
 
         const changeCamEle = document.getElementById("changeCam");
+        var streamUsed = undefined;
 
         var model = undefined;
 
@@ -83,14 +84,24 @@
             window.requestAnimationFrame(predictWebCam);
         }
 
+        const supports = navigator.mediaDevices.getSupportedConstraints();
+        if (!supports['facingMode']) {
+            alert('This browser does not support facingMode');
+        }
+
         var camFacingMode = "user";
 
         function loadVideo(cam) {
             if (navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.getUserMedia({ video: {facingMode: "enviroment"}})
+                navigator.mediaDevices.getUserMedia(const options = {
+                    audio: false,
+                    video: {
+                        facingMode: 'environment',
+                    },
+                };)
                 .then(stream => {
-                    mainVideo.srcObject = null;
                     mainVideo.srcObject = stream;
+                    streamUsed = stream;
                     mainVideo.addEventListener("loadeddata", predictWebCam)
                 }).catch(err => {
                     console.log(err);
