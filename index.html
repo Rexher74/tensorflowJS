@@ -96,7 +96,7 @@
                 navigator.mediaDevices.getUserMedia({
                     audio: false,
                     video: {
-                        facingMode: 'environment',
+                        facingMode: cam,
                     },
                 })
                 .then(stream => {
@@ -122,7 +122,7 @@
         })
 
         function changeCam() {
-            mainVideo.srcObject.getTracks().forEach((track) => {
+            streamUsed.getTracks().forEach((track) => {
                 track.stop();
             })
             if (camFacingMode == "user") {
