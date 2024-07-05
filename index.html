@@ -28,7 +28,6 @@
         const mainDivCam = document.getElementById("camLiveDiv");
 
         const changeCamEle = document.getElementById("changeCam");
-        var streamUsed = undefined;
 
         var model = undefined;
 
@@ -84,25 +83,13 @@
             window.requestAnimationFrame(predictWebCam);
         }
 
-        const supports = navigator.mediaDevices.getSupportedConstraints();
-        if (!supports['facingMode']) {
-            alert('This browser does not support facingMode');
-        }
-
         var camFacingMode = "user";
 
-        function loadVideo() {
+        function loadVideo(cam) {
             if (navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.getUserMedia({
-                    audio: false,
-                    video: {
-                        facingMode: camFacingMode,
-                    },
-                })
+                navigator.mediaDevices.getUserMedia({ video: {facingMode: cam}})
                 .then(stream => {
-                    console.log(camFacingMode)
                     mainVideo.srcObject = stream;
-                    streamUsed = stream;
                     mainVideo.addEventListener("loadeddata", predictWebCam)
                 }).catch(err => {
                     console.log(err);
@@ -119,25 +106,21 @@
             waiting.style.display = "none";
             changeCamEle.style.display = "block";
             changeCamEle.addEventListener("click", changeCam);
-            loadVideo();
+            loadVideo(camFacingMode);
         })
 
         function changeCam() {
-            if (streamUsed) {
-                
-                const tracks = streamUsed.getTracks();
-                console.log(tracks)
-                console.log(streamUsed)
-                tracks.forEach(track => track.stop());
+            mainVideo.srcObject.getTracks().forEach((track) => {
+                track.stop();
+            })
+            if (camFacingMode == "user") {
+                camFacingMode = "environment";
             }
-            if (camFacingMode == 'user') {
-                camFacingMode = 'enviroment';
-            }
-            else if (camFacingMode == 'enviroment'){
-                camFacingMode = 'user';
+            else if (camFacingMode == "environment"){
+                camFacingMode = "user";
 
             }
-            loadVideo();
+            loadVideo(camFacingMode);
         }
 
 
