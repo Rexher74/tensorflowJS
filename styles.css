@@ -12,10 +12,17 @@ body {
     flex-direction: column;
 }
 
+#videoMask{
+    border-radius: 10px; 
+    overflow: hidden;
+    margin: 30px;
+    box-sizing: border-box;
+}
+
 #camLiveDiv{
     position: relative;
-    border-radius: 25px;
-    background-color: rgb(223, 223, 255);
+    border-radius: 10px;
+    background-color: aliceblue;
     display: flex;
     justify-content: center;
     box-shadow: 0px 0px 30px -5px rgba(0,0,0,0.5)
@@ -23,10 +30,8 @@ body {
 
 #mainVideo{
     position: relative;
-    padding: 30px;
     box-sizing: border-box;
     display: none;
-    border-radius: 25px;
 }
 
 #waiting{
